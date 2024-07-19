@@ -4,8 +4,11 @@ Welcome to the EduVision GitHub repository! EduVision is an AI-powered web appli
 # Structure:
 
 **backend/**: This directory contains the backend code of the EduVision platform, including the API endpoints, database models, and business logic implemented in Python using the Django framework.
+
 **frontend/**: Here, you will find the frontend code for the EduVision platform, implemented using C# with Blazor. This directory also includes the HTML and CSS files for the user interface.
+
 **ai_models/**: This directory contains the trained AI models used by EduVision to enhance the platform's capabilities. The models are implemented using Python-based AI/ML libraries, and they play a crucial role in providing personalized learning paths and real-time assistance.
+
 **voice_interaction/**: This directory contains the source code for voice recognition and text-to-speech functionalities, utilizing services like Google Cloud Speech-to-Text and Amazon Polly.
 
 # Purpose
