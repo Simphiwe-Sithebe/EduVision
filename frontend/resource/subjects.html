@@ -50,6 +50,12 @@
             background: #0056b3;
         }
 
+        li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 20px;
@@ -66,14 +72,14 @@
     <div class="container">
         <h1>Select a Subject</h1>
         <ul id="subjects">
-            <li>Life Orientation</li>
-            <li>Life Science</li>
-            <li>History</li>
-            <li>Economics</li>
-            <li>Business Studies</li>
-            <li>English</li>
-            <li>Tourism</li>
-            <li>Geography</li>
+            <li><a href="life_orientation.html">Life Orientation</a></li>
+            <li><a href="life_science.html">Life Science</a></li>
+            <li><a href="history.html">History</a></li>
+            <li><a href="economics.html">Economics</a></li>
+            <li><a href="business_studies.html">Business Studies</a></li>
+            <li><a href="english.html">English</a></li>
+            <li><a href="tourism.html">Tourism</a></li>
+            <li><a href="geography.html">Geography</a></li>
         </ul>
     </div>
 
@@ -133,8 +139,8 @@
             const subjectIndex = subjects.map(subject => subject.toLowerCase()).indexOf(response);
             if (subjectIndex !== -1) {
                 alert("You selected: " + subjects[subjectIndex]);
-                // Here you can navigate to the selected subject page
-                // window.location.href = subjects[subjectIndex].toLowerCase().replace(/\s+/g, '-') + ".html";
+                // Navigate to the selected subject page
+                window.location.href = subjects[subjectIndex].toLowerCase().replace(/\s+/g, '_') + ".html";
             } else {
                 alert("Subject not recognized. Please try again.");
                 readSubjects();
