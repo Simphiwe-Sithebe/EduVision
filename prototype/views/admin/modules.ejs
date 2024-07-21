@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome to admin page</title>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <link rel="stylesheet" type="text/css" href="css/font/flaticon.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Sans|Josefin+Sans"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta name="description" content="Online Exam" />
+    <meta
+      name="author"
+      content="Sukanya Ledalla, Akhil Regonda, Nishanth Kadapakonda"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <style>
+    .oq-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .oq-table th,
+    .oq-table td {
+      border: 1px solid #969696;
+      text-align: left;
+      padding: 8px;
+    }
+  </style>
+
+  <body>
+    <div class="oq-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="">
+              <a href="/"><img src="images/quiz.png" class="oq-logo" /></a>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="oq-userArea pull-right">
+              <span class="oq-username"> Administrator </span>
+              <a class="oq-btn" href="/auth/logout">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="oq-viewTestsBody">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+            <div class="oq-viewTests">
+              <div class="oq-testsHead">
+                <div class="row">
+                  <div class="col-md-6">
+                    <span class="oq-testsHeadText"> Students </span>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="text-center">
+                      <!-- <a href="savetest.php?test=<?php echo $test;?>" class="oq-btn">View the quiz</a> -->
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="pull-right">
+                      <a href="/" class="oq-addbtn">Back</a>
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <span>List of students are shown below:</span>
+              </div>
+
+              <!-- Student Information Table -->
+              <table class="table oq-table">
+                <thead>
+                  <tr>
+                    <th>Identification Number</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>RSA ID</th>
+                    <th>Phone Number</th>
+                    <th>Operations</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (students && students.length > 0) { %> <%
+                  students.forEach((student, index) => { %>
+                  <tr>
+                    <td><%= student.identification_number %></td>
+                    <td>
+                      <%= student.first_name %> <%= student.last_name %>
+                      <br /><br /><br />
+                    </td>
+                    <td><%= student.email %> <br /><br /><br /></td>
+                    <td><%= student.rsa_id %> <br /><br /><br /></td>
+                    <td><%= student.phone_number %> <br /><br /><br /></td>
+                    <td class="oq-operations">
+                      <a id="edit-question-form" class="oq-btn">
+                        <span class="glyphicon glyphicon-pencil"></span> Edit
+                        Student</a
+                      ><br /><br />
+                      <a
+                        href="/user/delete/<%= student.user_id %>"
+                        class="oq-deletebtn"
+                      >
+                        <span class="glyphicon glyphicon-remove"></span>
+                        Delete</a
+                      >
+                    </td>
+                  </tr>
+                  <% }); %> <% } else { %>
+                  <tr>
+                    <td colspan="6" class="oq-news">No Students available</td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/questionHandler.js"></script>
+  </body>
+</html>

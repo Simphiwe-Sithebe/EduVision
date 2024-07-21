@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome Online Exam</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font/flaticon.css" />
+    <!--<link href='https://fonts.googleapis.com/css?family=Fira+Sans|Josefin+Sans' rel='stylesheet'>-->
+    <meta charset="UTF-8" />
+    <meta name="description" content="Online Exam" />
+    <meta name="author" content="Akhil Regonda" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    ";
+
+    <script>
+      function timer() {
+        console.log(".json_encode($row2['testtime']).");
+        var expDate = new Date().getTime();
+        var countDown = ".json_encode($row2['testtime']).";
+        console.log("countDown" + countDown);
+        var countDownDate = expDate + countDown * 60000;
+        var x = setInterval(function () {
+          var now = new Date().getTime();
+          var distance = countDownDate - now;
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          document.getElementById("timer").innerHTML =
+            minutes + " m " + seconds + " s ";
+          if (distance < 0) {
+            clearInterval(x);
+            alert("time up!! click enter see you score");
+            getScore(quiz);
+          }
+        }, 1000);
+      }
+    </script></head
+  >;
+
+  <body>
+    <div class="oq-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="">
+              <a href="index.php"
+                ><img src="/images/quiz.png" class="oq-logo"
+              /></a>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="oq-userArea pull-right">
+              <span class="oq-username">
+                <%= user.first_name + ' ' + user.last_name %>
+              </span>
+              <!-- <a class="btn btn-primary" href="logout.php?logout">Logout</a> -->
+              <a class="oq-btn btn btn-primary" href="/auth/logout">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="oq-viewTestsBody">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+            <div class="oq-viewTests" id="test">
+              <div class="oq-instruct">
+                <h3 id="testHead">
+                  Online Mock Exam - <%=test_name %> of <%=module_name%>
+                </h3>
+                <br />
+                <h3 id="instructHead">
+                  Say the word "instructions" to listen instructions
+                </h3>
+                <br /><br />
+                <p id="spresult7" class="spresult7"></p>
+                <p id="spresult8" class="spresult8"></p>
+                <p id="spresult" class="spresult"></p>
+                <p id="instructions">
+                  Instructions are.. <br />
+                  <br />1. To navigate between the questions say the word "next question" or "previous question".  <br />
+                  <br />2. To repeat question say the word "repeat question".  <br />
+                  <br />3. To submit the test say the word "submit test".  <br />
+                  <br />4. To start exam say the word "start or begin". <br />
+                </p>
+                <br />
+                <p id="spresult1" class="spresult1"></p>
+                <h4 id="speakTimer">
+                  Time remaining : <span id="timer">40 Minutes 0 seconds.</span>
+                </h4>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <form action="" method="post" name="oqform">
+                    <% if(questions.length > 0) { %>
+                    <input
+                      type="hidden"
+                      id="rowscount"
+                      name="totalQus"
+                      value="<%=questions.length%>"
+                    />
+                    <p id="spresult2" class="spresult2"></p>
+
+                    <div id="questionsContainer">
+                      <% questions.forEach((question, index) => { %>
+                      <div class="question" style="display: none">
+                        <button
+                          class="oq-aLeft oq-questions oq-form-control"
+                          disabled
+                        >
+                          Question <%= (index + 1) %>: <%=
+                          question.question_text %>
+                        </button>
+
+                        <input
+                          type="hidden"
+                          name="question_id<%=index %>"
+                          value="<%=question.question_id%>"
+                        />
+                        <input
+                          type="hidden"
+                          name="test_id<%=index %>"
+                          value="<%=question.question_id%>"
+                        />
+                        <br />
+
+                        <textarea
+                          class="form-control user_response"
+                          name="user_response"
+                          id="<%=question.question_id%>"
+                          cols="30"
+                          rows="5"
+                        ></textarea>
+                        <br /><br />
+                      </div>
+                      <% }) %>
+                    </div>
+
+                    <br /><br />
+                    <input
+                      type="submit"
+                      class="oq-btn"
+                      name="submit"
+                      id="oqsubmit"
+                      value="submit test"
+                    />
+                    <% } %>
+                  </form>
+                </div>
+              </div>
+<!-- 
+              <div class="oq-menu">
+                The page coming soon --- for writing a using voice command test
+                <br />
+                <br />
+                <a class="oq-btn btn btn-primary" href="/">Back To Home Page</a>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

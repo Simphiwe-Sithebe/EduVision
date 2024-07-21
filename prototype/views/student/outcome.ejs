@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome Online Exam</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font/flaticon.css" />
+    <!--<link href='https://fonts.googleapis.com/css?family=Fira+Sans|Josefin+Sans' rel='stylesheet'>-->
+    <meta charset="UTF-8" />
+    <meta name="description" content="Online Exam" />
+    <meta name="author" content="Goodness Themba Chauke" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div class="oq-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="">
+              <a href="/"><img src="/images/quiz.png" class="oq-logo" /></a>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="oq-userArea pull-right">
+              <span class="oq-username">
+                <%= user.first_name + ' ' + user.last_name %>
+              </span>
+              <a href="/"
+                ><span class="glyphicon glyphicon-home"></span
+                >&nbsp;&nbsp;Home</a
+              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <!-- <a class="btn btn-primary" href="logout.php?logout">Logout</a> -->
+              <a class="oq-btn btn btn-primary" href="/auth/logout">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="oq-userResultBody">
+      <div class="container-fluid">
+        <div class="row" style="width: fit-content">
+          <div class="col-md-8" style="width: fit-content">
+            <div class="pull-right">
+              <a href="/export/<%= testId %>">
+                <span class="oq-addbtn" style="cursor: pointer">
+                  Export To Excel (CSV)
+                </span>
+              </a>
+            </div>
+
+            <div class="oq-userResult">
+              <h5>
+                Following consists of tests scores along with the subject name:
+              </h5>
+              <br />
+              <table class="table oq-table">
+                <% if (users.length > 0) { %>
+
+                <tr class="usertable">
+                  <th>Student Number</th>
+                  <th>First Name</th>
+                  <th>LastName</th>
+                  <th>Date</th>
+                  <th>Module</th>
+                  <th>Test Name</th>
+                  <th>Marks</th>
+                  <th>Action</th>
+                </tr>
+
+                <% users.forEach((user, index) => { %>
+
+                <tr class="">
+                  <th><%= user.identification_number %></th>
+                  <th><%= user.first_name %></th>
+                  <th><%= user.last_name %></th>
+                  <th><%= user.date %></th>
+                  <th><%= moduleName %></th>
+                  <th><%= testName %></th>
+                  <th><%= user.percentage%>%</th>
+                  <th>
+                    <a
+                      href="/report/view/<%= user.user_id %>/<%= moduleId %>/<%= testId %>"
+                    >
+                      View Report
+                    </a>
+                  </th>
+
+                  <% }); %> <% } else { %>
+                  <span class="oq-news"
+                    >It appears that no students have completed this test yet.
+                    Feel free to check back later for updates.</span
+                  >
+                  <br />
+                  <% } %>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+  </body>
+</html>
