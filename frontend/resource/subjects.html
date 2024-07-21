@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #007BFF;
+            color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        li:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            li {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select a Subject</h1>
+        <ul id="subjects">
+            <li>Life Orientation</li>
+            <li>Life Science</li>
+            <li>History</li>
+            <li>Economics</li>
+            <li>Business Studies</li>
+            <li>English</li>
+            <li>Tourism</li>
+            <li>Geography</li>
+        </ul>
+    </div>
+
+    <script>
+        // List of subjects
+        const subjects = [
+            "Life Orientation",
+            "Life Science",
+            "History",
+            "Economics",
+            "Business Studies",
+            "English",
+            "Tourism",
+            "Geography"
+        ];
+
+        // Function to read out subjects
+        function readSubjects() {
+            const synth = window.speechSynthesis;
+            let utterance = new SpeechSynthesisUtterance("Please select a subject. The available subjects are " + subjects.join(", "));
+            synth.speak(utterance);
+            utterance.onend = function() {
+                startListening();
+            };
+        }
+
+        // Function to start listening for user response
+        function startListening() {
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = "en-US";
+                recognition.start();
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript.toLowerCase();
+                    handleUserResponse(transcript);
+                };
+
+                recognition.onerror = function(event) {
+                    console.error("Speech recognition error: ", event.error);
+                    alert("Sorry, we couldn't hear you. Please try again.");
+                    readSubjects();
+                };
+
+                recognition.onend = function() {
+                    console.log("Speech recognition ended.");
+                };
+            } else {
+                alert("Sorry, your browser does not support speech recognition.");
+            }
+        }
+
+        // Function to handle user response
+        function handleUserResponse(response) {
+            const subjectIndex = subjects.map(subject => subject.toLowerCase()).indexOf(response);
+            if (subjectIndex !== -1) {
+                alert("You selected: " + subjects[subjectIndex]);
+                // Here you can navigate to the selected subject page
+                // window.location.href = subjects[subjectIndex].toLowerCase().replace(/\s+/g, '-') + ".html";
+            } else {
+                alert("Subject not recognized. Please try again.");
+                readSubjects();
+            }
+        }
+
+        // Start the process when the page loads
+        window.onload = function() {
+            readSubjects();
+        };
+    </script>
+</body>
+</html>
