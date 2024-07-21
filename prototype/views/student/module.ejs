@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Welcome Online Exam</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/css/font/flaticon.css">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans|Josefin+Sans" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="description" content="Online Exam">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <% var words = [], test_id = [], k = 0; %>
+
+    <% if (tests.length > 0) { %> 
+        <% tests.forEach(test => { %>
+            <% words[k] = test.test_name; %>
+            <% test_id[k] = test; %>
+            <% console.log('Words:' + words); %>
+            <% k++; %>
+        <% }); %>
+    <% } else { %>
+        <% console.log('No Test Available'); %>
+    <% } %>
+
+
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.addEventListener('beforeunload', function(event) {
+
+                console.log("Trying to stop speaker of prev page.....");
+
+                if (speechSynthesis.speaking) {
+                     console.log("It is speaking so now you can stop it.");
+                    speechSynthesis.cancel();
+                }
+            });
+        });
+    </script>
+</head>
+
+
+
+<body>
+    <div class="oq-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class=""><a href="/"><img src="/images/quiz.png" class="oq-logo"></a></div>
+                </div>
+                <div class="col-md-8">
+                    <div class="oq-userArea pull-right">
+                        <span class="oq-username"> <%= user.first_name + ' ' + user.last_name %> </span>
+                        <!-- <a class="btn btn-primary" href="logout.php?logout">Logout</a> -->
+                        <a class="oq-btn btn btn-primary" href="/auth/logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="oq-menuBody">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="oq-menu">
+
+                        <span id="oq-subjectsList">
+                            
+                            <% if (tests.length > 0) { %>
+                                List of tests for the subject <%= module_name %> are.. <br><br>
+                              <% for (let i = 0; i < tests.length; i++) { %>
+
+                                 <a href="/tests/<%= tests[i].test_id %>">
+
+                                     <span class="tests"><%= words[i] %>.</span>
+
+                                 </a>
+
+
+                               <br> <br>
+                              <% } %>
+                              Choose one by saying the test name or say repeat to repeat the list.  Or you can click the test.
+                            <% } else { %>
+                              There are no tests available to write for <%= module_name %> <br> <br> <span>You will be redirected to main page in seconds .</span>
+                            <% } %>
+                          </span>
+
+
+                        <p id="spresult" class="spresult"></p>
+
+
+                        <span class="modules-hiden" style="display: none;">
+                            <% for (let i = 0; i < test_id.length; i++) { %>
+                                <span class="test-id-ob"><%= JSON.stringify(test_id[i]) %></span><br>
+                            <% } %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script type="text/javascript">
+
+    var wordElement = document.querySelectorAll('.tests'); // Replace with the actual ID or class of the span
+    var testIdElement = document.querySelectorAll('.test-id-ob');
+    console.log(wordElement);
+    var words = [];
+    var testId = [];
+
+    wordElement.forEach(word => {
+        console.log(word.textContent.slice(0, -1));
+        words.push(word.textContent.slice(0, -1))
+    });
+
+    testIdElement.forEach(test => {
+        // console.log(JSON.parse(word.textContent));
+        testId.push(JSON.parse(test.textContent))
+    });
+
+
+    if(words.length == 0 && testId.length == 0){
+        setTimeout(function(){
+            window.location = "/"
+        }, 8000);
+    }
+
+    console.log(words);
+
+    function findTestByName(testName) {
+    testName = testName.replace(/\.$/, '');
+    const test = testId.find(test => test.test_name.toLowerCase().trim() === testName.toLowerCase().trim());
+        return test ? test.test_id : null;
+    }
+
+    console.log("findTestByName(testName) :", findTestByName("CLASS TEST ONE"));
+    // console.log("words :", words);
+
+    var syn = window.speechSynthesis;
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+    var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+    var lsub = document.getElementById("oq-subjectsList").textContent;
+    console.log(lsub);
+    var slsub = new SpeechSynthesisUtterance(lsub);
+    console.log(slsub);
+    syn.speak(slsub);
+    slsub.onend = function(event) {
+        console.log("end");
+        subjects();
+    }
+    var resultPara = document.querySelector('.spresult');
+
+    function subjects() {
+        var flag = 0;
+        console.log("subjects");
+        var grammar = '#JSGF V1.0; grammar phrase; public <phrase> = ' + words + ';';
+        var recognition = new SpeechRecognition();
+        var speechRecognitionList = new SpeechGrammarList();
+        speechRecognitionList.addFromString(grammar, 1);
+        recognition.grammars = speechRecognitionList;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        recognition.start();
+        recognition.onresult = function(event) {
+            var speechResult = event.results[0][0].transcript;
+            console.log("speechResult:" + speechResult);
+            console.log("words:" + words);
+            for (var i = 0; i < words.length; i++) {
+                if (speechResult.toLowerCase() === words[i].toLowerCase() || speechResult.toLowerCase() === `${words[i].toLowerCase()}.`) {
+                    flag = 1;
+                    console.log("speech result: " + speechResult);
+                    resultPara.textContent = 'Speech received: ' + speechResult + '.';
+                    var syn = window.speechSynthesis;
+                    var testhead = document.getElementById("spresult").textContent;
+                    var testThis = new SpeechSynthesisUtterance(testhead);
+                    syn.speak(testThis);
+                    console.log(testThis);
+                    testThis.onend = function(event) {
+                        window.location = `/tests/${findTestByName(speechResult)}`;
+                    }
+                    break;
+                } else if (speechResult === "repeat") {
+                    flag = 1;
+                    console.log("speech result: " + speechResult);
+                    resultPara.textContent = 'Speech received: ' + speechResult + '.';
+                    var syn = window.speechSynthesis;
+                    var testhead = document.getElementById("spresult").textContent;
+                    var testThis = new SpeechSynthesisUtterance(testhead);
+                    syn.speak(testThis);
+                    console.log(testThis);
+                    testThis.onend = function(event) {
+                        speakSub();
+                    }
+                    break;
+                }
+            }
+            if (i == words.length) {
+                flag = 2;
+                resultPara.textContent = 'Speech received: ' + speechResult + '. No such operation.';
+                var syn = window.speechSynthesis;
+                var noOper = document.getElementById("spresult").textContent;
+                var noOpr = new SpeechSynthesisUtterance(noOper);
+                syn.speak(noOpr);
+                console.log("-else");
+                console.log(noOpr);
+                noOpr.onend = function(event) {
+                    console.log('No such operation over. speak time:' + event.elapsedTime + ' milliseconds.');
+                    speakSub();
+                }
+            }
+        }
+        recognition.onend = function() {
+            console.log("onend");
+            if (flag == 1 || flag == 2) {
+                console.log("onend if");
+                console.log("flag :" + flag);
+                recognition.stop();
+            } else {
+                if (flag == 4) {
+                    console.log("flag :" + flag);
+                    recognition.stop();
+                } else {
+                    console.log("onend else else");
+                    recognition.stop();
+                    console.log("flag :" + flag);
+                    speakSub();
+                }
+            }
+        }
+
+        recognition.onerror = function(event) {
+            flag = 4;
+            console.log("flag :" + flag);
+            speakSub();
+        }
+    }
+
+    function speakSub() {
+        console.log("in speakSub");
+        var lsub = document.getElementById("oq-subjectsList").textContent;
+        var slsub = new SpeechSynthesisUtterance(lsub);
+        syn.speak(slsub);
+        console.log("in speakSub");
+        slsub.onend = function(event) {
+            console.log("speekSubend");
+            subjects();
+        }
+    }
+    </script>
+</body>
+
+</html>
+
+<?php
+            }
+        }
+?>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome to admin page</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font/flaticon.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Sans|Josefin+Sans"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta name="description" content="Online Exam" />
+    <meta
+      name="author"
+      content="Sukanya Ledalla, Akhil Regonda, Nishanth Kadapakonda"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body>
+    <div class="oq-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="">
+              <a href="/"><img src="/images/quiz.png" class="oq-logo" /></a>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="oq-userArea pull-right">
+              <span class="oq-username"> Administrator </span>
+              <a class="oq-btn" href="/auth/logout">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="oq-viewTestsBody">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+            <div class="oq-viewTests">
+              <div class="oq-testsHead">
+                <div class="row">
+                  <div class="col-md-6">
+                    <span
+                      class="oq-testsHeadText"
+                      style="text-transform: capitalize"
+                    >
+                    </span>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="text-center">
+                      <!-- <a href="savetest.php?test=<?php echo $test;?>" class="oq-btn">View the quiz</a> -->
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="pull-right">
+                      <a href="/" class="oq-addbtn">Back</a>
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <span style="color: green"><%= message%></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+  </body>
+</html>

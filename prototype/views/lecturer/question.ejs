@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome Online Exam</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font/flaticon.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Sans|Josefin+Sans"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta name="description" content="Online Exam" />
+    <meta name="author" content="Akhil Regonda" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body>
+    <div class="oq-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="">
+              <a href="/"><img src="/images/quiz.png" class="oq-logo" /></a>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="oq-userArea pull-right">
+              <!-- <a href="/test/view/<%=testId%>"
+                ><span class="glyphicon glyphicon-arrow-left"></span> Back</a
+              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+              <a href="/"
+                ><span class="glyphicon glyphicon-home"></span
+                >&nbsp;&nbsp;Home</a
+              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <a class="oq-btn" href="/auth/logout">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="oq-viewTestsBody" style="width: fit-content">
+      <div class="container-fluid">
+        <div class="row" style="width: max-content">
+          <div style="width: fit-content">
+            <div class="oq-viewTests" style="width: max-content">
+              <div class="oq-testsHead">
+                <!-- <?php
+                                      oq-viewTests              if(isset($_GET['error'])){
+                                                        echo "<div class='row'><div class='col-md-12'><div class='pull-right'><span class='oq-error'>*Question already exists!</span></div></div></div><br>";
+                                                    }
+                                                ?> -->
+                <div class="row" style="width: max-content">
+                  <div class="col-md-6" style="width: fit-content">
+                    <span class="oq-testsHeadText"> <%= test.test_name%> </span>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="text-center">
+                      <!-- <a href="savetest.php?test=<?php echo $test;?>" class="oq-btn">View the quiz</a> -->
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="pull-right">
+                      <a
+                        class="oq-addbtn"
+                        data-toggle="modal"
+                        data-target=".newtest"
+                        >Add New Question</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <span>List of questions are shown below:</span>
+              </div>
+
+              <div
+                class="modal fade newtest"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="mySmallModalLabel"
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <div class="oq-questionModal">
+                        <form
+                          class="form"
+                          id="create-question-form"
+                          action=""
+                          method="post"
+                        >
+                          <br />
+                          <span>Question</span><br /><br />
+
+                          <span
+                            id="question-create-error"
+                            style="color: rgb(198, 79, 79)"
+                          >
+                          </span>
+                          <br /><br />
+                          <textarea
+                            class="form-control"
+                            placeholder="Enter the question"
+                            name="question_text"
+                            required
+                          ></textarea
+                          ><br />
+
+                          <div class="row">
+                            <input
+                              type="hidden"
+                              name="test_id"
+                              value="<%=testId%>"
+                            />
+                          </div>
+                          <br />
+                          <br /><br />
+
+                          <input
+                            type="submit"
+                            id="create-question-btn"
+                            class="form-control oq-btn"
+                            value="Create question"
+                            name="newques"
+                          />
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <table class="table oq-table">
+                <tbody>
+                  <% if (questions && questions.length > 0) { %> <%
+                  questions.forEach((question, index) => { %> <% if
+                  (question.guidelines) { %>
+                  <tr>
+                    <td colspan="3"><%= question.guidelines %></td>
+                  </tr>
+                  <% } %>
+                  <tr>
+                    <td>Question <%= index + 1 %></td>
+                    <td>
+                      <%= question.question_text %><br /><br />
+                      <br />
+                      <div class="row">
+                        <div class="col-md-10 offset-md-1">
+                          <span class="oq-news">Explanation:</span><br /><br />
+                        </div>
+                      </div>
+                    </td>
+                    <td class="oq-operations">
+                      <a
+                        id="edit-question-form"
+                        data-toggle="modal"
+                        data-target=".<%= question.question_id %>"
+                        class="oq-btn"
+                        ><span class="glyphicon glyphicon-pencil"></span> Edit
+                        Question</a
+                      ><br /><br />
+                      <a
+                        href="/question/delete/<%= question.question_id %>/<%= testId %>"
+                        class="oq-deletebtn"
+                        ><span class="glyphicon glyphicon-remove"></span>
+                        Delete</a
+                      >
+                    </td>
+                  </tr>
+                  <div
+                    class="modal fade <%= question.question_id %>"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="mySmallModalLabel"
+                  >
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <div class="oq-questionModal">
+                            <form
+                              class="form"
+                              action="/question/update/<%= question.question_id %>/<%= testId %>"
+                              method="post"
+                              id="update-question-form"
+                            >
+                              <br />
+                              <span>Question</span><br /><br />
+
+                              <textarea
+                                class="form-control"
+                                name="question_text"
+                                minlength="10"
+                              >
+<%= question.question_text %></textarea
+                              >
+                              <br /><br />
+                              <input
+                                type="submit"
+                                class="form-control oq-btn update-btn"
+                                value="Update question"
+                                name="upques"
+                                id="update-question-btn"
+                              />
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <% }); %> <% } else { %>
+                  <tr>
+                    <td colspan="3" class="oq-news">No questions available</td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/questionHandler.js"></script>
+
+    <!-- <script>
+      // Create Question
+      // document
+      //   .querySelector("#create-question-form")
+      //   .addEventListener("submit", function (event) {
+      //     event.preventDefault();
+
+      //     const btn = document.getElementById("create-question-btn");
+      //     btn.disabled = true;
+      //     btn.value = "Creating question...";
+
+      //     const form = document.querySelector("#create-question-form");
+      //     const formData = new FormData(form);
+
+      //     const jsonFormData = {};
+      //     formData.forEach((value, key) => {
+      //       jsonFormData[key] = value;
+      //     });
+
+      //     fetch("http://localhost:3000/question/create", {
+      //       method: "POST",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify(jsonFormData),
+      //     })
+      //       .then((response) => {
+      //         if (!response.ok) {
+      //           throw new Error("Network response was not ok");
+      //         }
+      //         return response.json();
+      //       })
+      //       .then((data) => {
+      //         if (data.status === true) {
+      //           console.log("Module created successfully!");
+      //           console.log(data);
+      //           // Close the modal
+      //           const queryParams = new URLSearchParams(window.location.search);
+      //           const currentQuestionId = queryParams.get("test");
+
+      //           const currentURL = `/question/view?test=${currentQuestionId}`;
+      //           window.location.href = currentURL;
+      //         } else {
+      //           console.error(`Error: ${data.message}`);
+      //           btn.disabled = false;
+      //           btn.value = "Create question";
+      //         }
+      //       })
+      //       .catch((error) => {
+      //         console.error(`Error: ${error.message}`);
+      //         btn.disabled = false;
+      //         btn.value = "Create question";
+      //       });
+      //   });
+
+
+
+
+      // document.addEventListener("submit", function (event) {
+      //   const form = event.target.closest("form");
+      //   if (!form) return; // If the submitted element is not a form, do nothing
+
+      //   if (form.id === "update-question-form") {
+      //     // Handle create question form submission
+      //     event.preventDefault();
+
+      //     const btn = document.getElementById("update-question-btn");
+      //     btn.disabled = true;
+      //     btn.value = "Updating question...";
+
+      //     const formData = new FormData(form);
+
+      //     fetch("http://localhost:3000/question/create", {
+      //       method: "POST",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify(Object.fromEntries(formData)),
+      //     })
+      //       .then((response) => {
+      //         if (!response.ok) {
+      //           throw new Error("Network response was not ok");
+      //         }
+      //         return response.json();
+      //       })
+      //       .then((data) => {
+      //         if (data.status === true) {
+      //           console.log("Question created successfully!");
+      //           console.log(data);
+      //           // Close the modal or redirect to another page if needed
+      //         } else {
+      //           console.error(`Error: ${data.message}`);
+      //         }
+      //       })
+      //       .catch((error) => {
+      //         console.error(`Error: ${error.message}`);
+      //       })
+      //       .finally(() => {
+      //         btn.disabled = false;
+      //         btn.value = "Create question";
+      //       });
+      //   } else if (form.id === "update-question-form") {
+      //     // Handle update question form submission
+      //     event.preventDefault();
+
+      //     const btn = document.getElementById("update-question-btn");
+      //     btn.disabled = true;
+      //     btn.value = "Updating question...";
+
+      //     const formData = new FormData(form);
+
+      //     fetch("http://localhost:3000/question/update", {
+      //       method: "PUT",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify(Object.fromEntries(formData)),
+      //     })
+      //       .then((response) => {
+      //         if (!response.ok) {
+      //           throw new Error("Network response was not ok");
+      //         }
+      //         return response.json();
+      //       })
+      //       .then((data) => {
+      //         if (data.status === true) {
+      //           console.log("Question updated successfully!");
+      //           console.log(data);
+      //           const queryParams = new URLSearchParams(window.location.search);
+      //           const currentQuestionId = queryParams.get("test");
+
+      //           const currentURL = `/question/view?test=${currentQuestionId}`;
+      //           window.location.href = currentURL;
+      //         } else {
+      //           console.error(`Error: ${data.message}`);
+      //         }
+      //       })
+      //       .catch((error) => {
+      //         console.error(`Error: ${error.message}`);
+      //       })
+      //       .finally(() => {
+      //         btn.disabled = false;
+      //         btn.value = "Update question";
+      //       });
+      //   }
+      // });
+
+      //     .addEventListener("submit", function (event) {
+      //       event.preventDefault();
+
+      //       const btn = document.getElementById("update-question-btn");
+      //       btn.disabled = true;
+      //       btn.value = "Updating question...";
+
+      //       const form = document.querySelector("#update-question-form");
+      //       const formData = new FormData(form);
+
+      //       const jsonFormData = {};
+      //       formData.forEach((value, key) => {
+      //         jsonFormData[key] = value;
+      //       });
+
+      //       fetch("http://localhost:3000/question/update", {
+      //         method: "PUT",
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //         },
+      //         body: JSON.stringify(jsonFormData),
+      //       })
+      //         .then((response) => {
+      //           if (!response.ok) {
+      //             throw new Error("Network response was not ok");
+      //           }
+      //           return response.json();
+      //         })
+      //         .then((data) => {
+      //           if (data.status === true) {
+      //             console.log("Module updated successfully!");
+      //             console.log(data);
+      //             // Close the modal
+      //             const queryParams = new URLSearchParams(window.location.search);
+      //             const currentQuestionId = queryParams.get("test");
+
+      //             const currentURL = `/question/view?test=${currentQuestionId}`;
+      //             window.location.href = currentURL;
+      //           } else {
+      //             console.error(`Error: ${data.message}`);
+      //             btn.disabled = false;
+      //             btn.value = "Update question";
+      //           }
+      //         })
+      //         .catch((error) => {
+      //           console.error(`Error: ${error.message}`);
+      //           btn.disabled = false;
+      //           btn.value = "Update question";
+      //         });
+      //     });
+      //
+    </script> -->
+  </body>
+</html>

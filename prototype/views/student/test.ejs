@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome Online Exam</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font/flaticon.css" />
+    <!--<link href='https://fonts.googleapis.com/css?family=Fira+Sans|Josefin+Sans' rel='stylesheet'>-->
+    <meta charset="UTF-8" />
+    <meta name="description" content="Online Exam" />
+    <meta name="author" content="Akhil Regonda" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+
+.fa-language {
+    font-size: 20px;
+    color: rgb(109, 176, 212); /* Initial icon color */
+    transition: color 0.3s ease;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+    </style>
+    
+    
+    <script>
+      function timer() {
+        console.log(".json_encode($row2['testtime']).");
+        var expDate = new Date().getTime();
+        var countDown = ".json_encode($row2['testtime']).";
+        console.log("countDown" + countDown);
+        var countDownDate = expDate + countDown * 60000;
+        var x = setInterval(function () {
+          var now = new Date().getTime();
+          var distance = countDownDate - now;
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          document.getElementById("timer").innerHTML =
+            minutes + " m " + seconds + " s ";
+          if (distance < 0) {
+            clearInterval(x);
+            alert("time up!! click enter see you score");
+            getScore(quiz);
+          }
+        }, 1000);
+      }
+    </script>
+    
+    
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.addEventListener('beforeunload', function(event) {
+
+                console.log("Trying to stop speaker of prev page.....");
+
+                if (speechSynthesis.speaking) {
+                     console.log("It is speaking so now you can stop it.");
+                    speechSynthesis.cancel();
+                }
+            });
+        });
+    </script>
+    
+    
+    </head>
+
+  <body>
+    <div class="oq-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="">
+              <a href="index.php"
+                ><img src="/images/quiz.png" class="oq-logo"
+              /></a>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="oq-userArea pull-right">
+              <span class="oq-username">
+                <%= user.first_name + ' ' + user.last_name %>
+              </span>
+              <!-- <a class="btn btn-primary" href="logout.php?logout">Logout</a> -->
+              <a class="oq-btn btn btn-primary" href="/auth/logout">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="oq-viewTestsBody">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+            <div class="oq-viewTests" id="test">
+              <div class="oq-instruct">
+                <h3 id="testHead">
+                  Online Mock Exam - <%=test_name %> of <%=module_name%>
+                </h3>
+                <br />
+                <h3 id="instructHead">
+
+                  <% if (questions.length > 0) { %>
+
+                  Say the word "instructions" to listen instructions
+                </h3>
+                <br /><br />
+                <p id="spresult7" class="spresult7"></p>
+                <p id="spresult8" class="spresult8"></p>
+                <p id="spresult" class="spresult"></p>
+                <p id="instructions">
+                  Instructions are.. <br />
+                  <br />1. To navigate between the questions say the word "next question" or "previous question".  <br />
+                  <br />2. To repeat question say the word "repeat question".  <br />
+                  <br />3. To submit the test say the word "submit test".  <br />
+                   <br />4. Click the icon next to the question to translate it into <%= language %>.<br />
+                  <br />5. To translate your answer into <%= language %>, click the button located below the answer area.<br />
+                  <br />6. To start the test say begin or wait the test will start in few seconds<br />
+                 
+                </p>
+                <br />
+                <p id="spresult1" class="spresult1"></p>
+                <h4 id="speakTimer">
+                  Time remaining : <span id="timer">40 Minutes 0 seconds.</span>
+                </h4>
+
+                <% } else { %>
+                  There are no questions available to write this test
+                  <% } %>
+
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                 
+                  <form method="post" name="oqform" id="oqform">
+                    <input type='hidden' id='rowscount' name='totalQus'>
+                    <p id='spresult2' class='spresult2'></p>
+
+                    <div id="questionsContainer">
+    <% questions.forEach((question, index) => { %>
+        <div class='question'>
+            <button class='oq-aLeft oq-questions oq-form-control' disabled>
+                Question <%= index + 1 %>: <span class="question-text"><%= question.question_text +' ?' %></span>
+                <span class="button translate-button" data-question-id="<%= question.question_id %>" data-question-text="<%= question.question_text %>" >
+                    <i class="fa-solid fa-language"></i>
+                </span>
+            </button>
+
+            <div class="translated-question" id="translated-<%= question.question_id %>" style="display: none; margin-top: 10px; font-style: italic; color: gray;">
+               
+            </div>
+
+            <input type='hidden' id='<%= question.question_id %>' name='question_id<%= index %>' value='<%= question.question_id %>'>
+            <input type='hidden' name='test_id<%= index %>' value='<%= question.test_id %>'>
+            <br>
+            <textarea class="form-control user_response" name="user_response" id='response-<%= question.question_id %>' cols="30" rows="5"></textarea>
+
+            <span class="button oq-btn translate-answer-button" style="display: none; cursor: pointer; border-radius: 8px;" data-response-id="response-<%= question.question_id %>">
+              Translate Answer <i style="color: aliceblue;" class="fa-solid fa-language"></i>
+            </span>
+
+          <div class="translated-answer" id="translated-answer-<%= question.question_id %>" style="display: none; margin-top: 10px; font-style: italic; color: gray;"></div>
+        <br><br>
+
+        </div>
+    <% }); %>
+</div>
+
+                    <br>
+
+                  <button id="submit-btn" class="oq-btn" onclick="submitTestByClickingButton()">Submit Test</button>
+                   
+
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+
+
+function submitTestByClickingButton() {
+    const submitButton = document.getElementById('submit-btn');
+    submitButton.disabled = true;  // Disable the button
+    submitButton.textContent = 'Loading...';  // Change button text to 'Loading...'
+
+    const extractedQuestionsAnswers = extractQuestionsWithAnswersFromHTML();
+    extractedQuestionsAnswers.forEach((question, index) => {
+        console.log(`${question.question_text}`);
+        console.log(`Question ID: ${question.question_id}`);
+        console.log(`Test ID: ${question.test_id}`);
+        console.log(`Answer: ${question.answer}`);
+    });
+    console.log("START");
+
+    const evaluationPromises = extractedQuestionsAnswers.map(question => {
+        return fetch('/exam/evaluate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(question),
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+            return result; // Return the evaluation result
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            throw error;  // Propagate the error to the Promise.all handler
+        });
+    });
+
+    Promise.all(evaluationPromises)
+    .then((results) => {
+        const testIds = results.map(result => result.test_id);
+        const testId = testIds.length > 0 ? testIds[0] : null;
+        localStorage.setItem('evaluationCurrentResults', JSON.stringify(results));
+        window.location = '/exam/result/' + testId;
+        console.log("END");
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        submitButton.disabled = false;  // Re-enable the button if there's an error
+        submitButton.textContent = 'Submit Test';  // Revert button text if there's an error
+    });
+}
+
+    </script>
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/translation.js"></script>
+    <script src="/js/script.js"></script>
+
+
+    <style>
+    .translated-question {
+        margin-top: 10px;
+        font-style: italic;
+        color: gray;
+    }
+</style>
+
+  </body>
+</html>

@@ -34,7 +34,7 @@
               <h5 class="card-title">Empowering Blind Students Through Innovative AI Technology</h5>
               <p class="card-text">Welcome to our student portal, where blind students can learn and take quizzes with the help of cutting-edge AI technology.</p>
               <button type="button" class="btn btn-outline-light me-2">Sign Up</button>
-              <button type="button" class="btn btn-light">Login</button>
+              <a href="login.html"><button type="button" class="btn btn-light">Login</button></a>
           </div>
           <div class="overlay px-2 w-25 position-absolute top-50 end-0 translate-middle-y">
             <p class="out_text"><p>
@@ -102,6 +102,45 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-    <script src="/frontend/resource/main.js"></script>
+    <script>
+      let hasGreeted = false;
+      function greetUser() {
+          if (!hasGreeted) {
+              hasGreeted = true;
+              var msg = new SpeechSynthesisUtterance();
+              msg.text = "Hello, welcome to EduVision, a platform for visually impaired students through innovative AI technology. To login say , login. To create an account say , sign up ";
+              window.speechSynthesis.speak(msg);
+  
+              // Play a sound to notify the user that they can start speaking
+              var audio = new Audio('notification_sound.mp3'); // Replace with the path to your new sound file
+              audio.play();
+  
+              // Add a visual indicator
+              document.getElementById('recording_indicator').style.display = 'block';
+  
+              recognition.start();
+          }
+      }
+  
+      let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false; // Use final results
+      recognition.maxAlternatives = 1;
+      recognition.onresult = function(event) {
+          let last = event.results.length - 1;
+          let command = event.results[last][0].transcript;
+          document.querySelector('.out_text').textContent = 'Voice input: ' + command; // Display the user's response
+          if(command.toLowerCase() === 'login') {
+              window.location.href = 'login.html'; // Replace with your login page URL
+          } else if(command.toLowerCase() === 'create account') {
+              window.location.href = '/signup'; // Replace with your signup page URL
+          }
+      };
+      recognition.onspeechend = function() {
+          recognition.stop();
+          // Hide the visual indicator
+          document.getElementById('recording_indicator').style.display = 'none';
+      };
+  </script>
 </body>
 </html>

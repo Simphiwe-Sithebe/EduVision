@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>HTML Forms</h2>
+
+<form action="" id="formEl" method="post">
+  <label for="email">Email </label><br>
+  <input type="email" id="email" name="email" value="goodnessthembac@gmail.com"><br>
+  <label for="password">Password</label><br>
+  <input type="password" id="password" name="password" value="Doe"><br><br>
+  <input type="submit" value="Submit" id="formSub">
+</form> 
+
+<p>If you click the "Submit" button, the form-data will be sent to a page called "/action_page.php".</p>
+
+
+<script>
+
+const questionForm = document.getElementById("formEl");
+
+questionForm
+  .addEventListener("click", handleAddQuestion);
+
+  function enableBtn(){
+    const createBtn = document.getElementById("formSub");
+    createBtn.disabled = false;
+    createBtn.value = "Create";
+  }
+
+async function handleAddQuestion(e) {
+    e.preventDefault();
+          const form = document.querySelector("#formEl");
+          const formData = new FormData(form);
+          const jsonFormData = {};
+          formData.forEach((value, key) => {
+            jsonFormData[key] = value;
+          });
+          const status = validateInput(jsonFormData.email, jsonFormData.password);
+          console.log(jsonFormData);
+            const url = "/email/account";
+        if (status) {
+            console.log("status ", status);
+          const createBtn = document.getElementById("formSub");
+          createBtn.disabled = true;
+          createBtn.value = "Create Account...";
+                const queryParams = new URLSearchParams(window.location.search);
+                const currentQuestionId = queryParams.get("test");
+                // const currentURL = `/question/view?test=${currentQuestionId}`;
+
+            await sendHttpRequest(url, jsonFormData);
+        }else{
+            console.log("Fill input");
+        }
+}
+
+    
+async function sendHttpRequest(URL, data , redirect_url = "") {
+    try {
+      const res = await fetch(URL, {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      if (!result.status) {
+        console.log(result);
+      }
+      enableBtn()
+    //   window.location.href = redirect_url;
+    } catch (error) {
+      enableBtn()
+      console.log(error);
+    }
+  }
+
+  
+function validateInput(...inputFields) {
+  for (const field of inputFields) {
+    if (!field) {
+      console.log("All fields are required");
+      return false;
+    }
+  }
+  return true;
+}
+
+
+</script>
+
+
+
+</body>
+</html>

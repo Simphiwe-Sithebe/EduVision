@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome to edu exam</title>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <link rel="stylesheet" type="text/css" href="css/font/flaticon.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Sans|Josefin+Sans"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta name="description" content="Online Exam" />
+    <meta
+      name="author"
+      content="Sukanya Ledalla, Akhil Regonda, Nishanth Kadapakonda"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body>
+    <div class="oq-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="">
+              <a href="/"><img src="images/quiz.png" class="oq-logo" /></a>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="oq-userArea pull-right">
+              <span class="oq-username">
+                <%= user.first_name + ' ' + user.last_name %>
+              </span>
+              <a class="oq-btn" href="/auth/logout">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="oq-adminMenuBody">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">
+            <div class="oq-adminMenu">
+              <div class="text-center">
+                <img src="images/quiz_1.png" class="oq-logo" /><br /><br />
+              </div>
+              <a data-toggle="modal" data-target=".bs-example-modal-sm"
+                ><span class="flaticon-select-list"></span>&nbsp;&nbsp; Add/View
+                Module</a
+              ><br /><br />
+              <a data-toggle="modal" data-target=".delete-sub"
+                ><span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;
+                Delete a Module</a
+              ><br /><br />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade bs-example-modal-sm"
+      id="module-model"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="mySmallModalLabel"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="text-center">
+              <img src="images/quiz_1.png" class="oq-logo" /><br /><br />
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="text-center">
+              <div class="row">
+                <form class="form" action="viewtests.php" method="get">
+                  <span class="oq-modalLangHead">Select the module</span
+                  ><br /><br />
+                  <div class="col-md-2"></div>
+                  <div class="col-md-4">
+                    <select class="form-control" id="module-select" name="code">
+                      <option value="">Select Module</option>
+                      <% modules.forEach(module => { %>
+                      <option value="<%= module.module_id %>">
+                        <%= module.module_name %>
+                      </option>
+                      <% }); %>
+                    </select>
+                  </div>
+                  <br />
+                  <div class="col-md-4">
+                    <a
+                      id="view-tests-link"
+                      href="#"
+                      class="form-control oq-btn"
+                      name="viewtest"
+                      >View Tests</a
+                    >
+                  </div>
+                </form>
+
+                <script>
+                  document
+                    .getElementById("module-select")
+                    .addEventListener("change", function () {
+                      const selectedModuleId = this.value;
+                      const viewTestsLink =
+                        document.getElementById("view-tests-link");
+                      viewTestsLink.href = `/test/view/${selectedModuleId}`;
+                    });
+                </script>
+              </div>
+              <br /><br />
+              <div class="text-center">
+                <p>(or)</p>
+              </div>
+              <br />
+              <div class="row">
+                <!-- <?php
+                                                if($flag == 1){
+                                                    echo "<script>alert('language already exists');</script>";
+                                                }
+                                            ?> -->
+                <form class="form" id="create-module" method="post">
+                  <span class="oq-modalLangHead">Create new module</span> <br />
+                  <span
+                    id="module-create-error"
+                    style="color: rgb(198, 79, 79)"
+                  >
+                  </span
+                  ><br /><br />
+                  <div class="col-md-2" id="module-error"></div>
+                  <div class="col-md-4">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter the module name"
+                      name="module_name"
+                      id="module_name"
+                      required
+                    />
+                    <br />
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter the module code"
+                      name="module_code"
+                      id="module_code"
+                      required
+                    />
+                    <input
+                      type="hidden"
+                      value="<%=user.course_id%>"
+                      class="form-control"
+                      name="course_id"
+                    />
+                  </div>
+                  <br />
+                  <div class="col-md-4">
+                    <input
+                      type="submit"
+                      id="oq-createbtn"
+                      class="form-control oq-btn"
+                      value="Create"
+                      name="createModule"
+                    />
+                  </div>
+                </form>
+              </div>
+              <br /><br />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade delete-sub"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="mySmallModalLabel"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="text-center">
+              <img src="images/quiz_1.png" class="oq-logo" /><br /><br />
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="text-center">
+              <div class="row">
+                <form
+                  id="delete-module-form"
+                  class="form"
+                  action=""
+                  method="post"
+                >
+                  <span class="oq-modalLangHead">You are unable to delete the module.</span
+                  ><br /><br />
+                  <div class="col-md-2" id=""></div>
+                  <div class="col-md-4">
+                    <select
+                      class="form-control"
+                      id="module-delete-select"
+                      name="module_id"
+                    >
+                      <option value="">Select Module</option>
+                      <% modules.forEach(module => { %>
+                      <option value="<%=module.module_id %>">
+                        <%= module.module_name %>
+                      </option>
+                      <% }); %>
+                    </select>
+                  </div>
+                  <br />
+    
+                </form>
+              </div>
+              <br /><br />
+              <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                  <span class="oq-caution" id="module-delete-error"
+                    >
+                    The module cannot be deleted because some students have already registered or written tests for it.</span
+                  >
+                </div>
+              </div>
+              <br />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+
+    <script>
+      // Create Question
+      document
+        .querySelector("#create-module")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const form = document.querySelector("#create-module");
+          const formData = new FormData(form);
+
+          const jsonFormData = {};
+          formData.forEach((value, key) => {
+            if (value.trim().length <= 0 || value.trim() == "") {
+              errorMessage("Please enter valid module name/code");
+              return;
+            }
+
+            jsonFormData[key] = value.trim();
+          });
+
+          const createBtn = document.getElementById("oq-createbtn");
+          createBtn.disabled = true;
+          createBtn.value = "Creating module...";
+
+          fetch("/module/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(jsonFormData),
+          })
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data);
+              if (data.status === true) {
+                console.log("Module created successfully!");
+                console.log(data);
+                // Close the modal
+                window.location.href = `/`;
+              } else {
+                console.log(data);
+                enableBtn();
+              }
+            })
+            .catch((error) => {
+              enableBtn();
+              console.error(`Error: ${error}`);
+            });
+        });
+
+      function errorMessage(message) {
+        document.getElementById(
+          "module-create-error"
+        ).textContent = `${message}`;
+        enableBtn();
+      }
+
+      function enableBtn() {
+        const createBtn = document.getElementById("oq-createbtn");
+        createBtn.disabled = false;
+        createBtn.value = "Create";
+      }
+
+      function closeModel() {
+        const clickEvent = new MouseEvent("click", {
+          view: window,
+          bubbles: true,
+          cancelable: true,
+          clientX: window.innerWidth,
+          clientY: window.innerHeight,
+        });
+        document.dispatchEvent(clickEvent);
+      }
+
+      // DELETE MODULE
+
+      document
+        .getElementById("delete-module-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const deleteBtn = document.querySelector(".oq-deletebtn");
+
+          const moduleId = document.getElementById(
+            "module-delete-select"
+          ).value;
+
+          // Show loading indicator
+          deleteBtn.disabled = true;
+          deleteBtn.value = "Deleting Module...";
+          fetch(`/module/delete/${moduleId}`, {
+            method: "DELETE",
+          })
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              if (data.status) {
+                console.log("Module deleted successfully:", data);
+                window.location.href = `/`;
+              } else {
+                deleteBtn.disabled = false;
+                deleteBtn.value = "Delete Module";
+                $(".delete-sub").modal("hide");
+                swal(`${data.message}`, "Contact System Administrator");
+                console.log(data.message);
+              }
+            })
+            .catch((error) => {
+              deleteBtn.disabled = false;
+              deleteBtn.value = "Deleting Module";
+              document.getElementById("module-delete-error").textContent =
+                "There was a problem with the delete module operation";
+
+              setTimeout(() => {
+                document.getElementById("module-delete-error").textContent =
+                  "*All the tests and questions of selected module will be lost if delete module is pressed";
+              }, 5000);
+              console.error(
+                "There was a problem with the delete module operation:",
+                error
+              );
+            });
+        });
+    </script>
+  </body>
+</html>

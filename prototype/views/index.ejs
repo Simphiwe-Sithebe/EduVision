@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome to Online Exam</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Sans|Josefin+Sans"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta name="description" content="Online Exam" />
+    <meta
+      name="author"
+      content="Sukanya Ledalla, Akhil Regonda, Nishanth Kadapakonda"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+                <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.addEventListener('beforeunload', function(event) {
+
+                console.log("Trying to stop speaker of prev page.....");
+
+                if (speechSynthesis.speaking) {
+                     console.log("It is speaking so now you can stop it.");
+                    speechSynthesis.cancel();
+                }
+            });
+        });
+    </script>
+
+
+  </head>
+
+  <body>
+    <div class="oq-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="">
+              <a href="/"><img src="images/quiz.png" class="oq-logo" /></a>
+            </div>
+          </div>
+          <div class="col-md-2 pull-right">
+            <div class="oq-adminArea">
+              <a class="oq-admin" href="/register">Create Account</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="oq-indexBody">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="oq-bodyContent" style="color: black">
+              <h1>Welcome to Edu Exam</h1>
+              <p>
+                This Site will provide the quiz for various subject of interest.
+                You need to login for online quiz.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4 col-md-offset-1">
+            <div class="oq-login text-center">
+              <img src="images/quiz_1.png" class="oq-logo" /><br /><br />
+              <form class="form" id="login-form" action="" method="post">
+                <p id="login-error-msg" style="color: rgb(230, 98, 98)"></p>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Student Number"
+                  name="identification_number"
+                  id="identification_number_input"
+                /><br />
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Enter Password"
+                  name="password"
+                /><br />
+
+                <select
+                  class="form-control"
+                  name="user_role"
+                  id="user_role_select"
+                >
+                  <option value="STUDENT">Student</option>
+                  <option value="LECTURER">Lecturer</option>
+                  <option value="ADMIN">Administrator</option>
+                </select>
+
+                <br />
+                <input
+                  type="submit"
+                  class="form-control oq-btn"
+                  value="Login"
+                  id="login"
+                  name="login"
+                /><br /><br />
+                New user? <a href="/register" class="">Signup for New Account</a
+                ><br /><br />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("user_role_select")
+        .addEventListener("change", function () {
+          var selectedRole = this.value;
+          var identificationNumberInput = document.getElementById(
+            "identification_number_input"
+          );
+
+          if (selectedRole === "LECTURER") {
+            identificationNumberInput.setAttribute(
+              "placeholder",
+              "Enter Lecturer Number"
+            );
+            identificationNumberInput.style.display = "block";
+          } else if (selectedRole === "STUDENT") {
+            identificationNumberInput.setAttribute(
+              "placeholder",
+              "Enter Student Number"
+            );
+            identificationNumberInput.style.display = "block";
+          } else if (selectedRole === "ADMIN"){
+            // If "Admin" is selected, remove the identificationNumberInput
+            identificationNumberInput.value = ""; // Clear input value
+            identificationNumberInput.style.display = "none"; // Hide the input
+          }
+        });
+    </script>
+
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/loginHandler.js"></script>
+  </body>
+</html>
